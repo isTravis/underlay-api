@@ -111,7 +111,7 @@ app.get('/test2', function(req, res) {
 
 app.get('/search', function(req, res) {
 	const searchTerm = req.query.q;
-	session.run(`MATCH (n:Pub) WHERE n.title =~ '(?i).*${searchTerm}.*' OR n.description =~ '(?i).*${searchTerm}.*' RETURN n`)
+	session.run(`MATCH (n:Publication) WHERE n.title =~ '(?i).*${searchTerm}.*' OR n.description =~ '(?i).*${searchTerm}.*' RETURN n`)
 	.then(function(result) {
 		return res.status(201).json(result);
 	})
