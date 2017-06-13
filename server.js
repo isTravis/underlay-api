@@ -96,6 +96,30 @@ app.get('/test2', function(req, res) {
 	});
 });
 
+app.get('/test2', function(req, res) {
+	const getPeople = session.run(`MATCH (source:Person) RETURN source LIMIT 5`);
+	const getPubs = session.run(`MATCH (source:Pub) RETURN source LIMIT 5`);
+	const getJournals = session.run(`MATCH (source:Journal) RETURN source LIMIT 5`);
+	Promise.all([getPeople, getPubs, getJournals])
+	.then(function(result) {
+		return res.status(201).json(result);
+	})
+	.catch(function(error) {
+		console.log(error);
+	});
+});
+
+app.get('/search', function(req, res) {
+	const searchTerm = req.query.q;
+	session.run(`MATCH (n:Pub) WHERE n.title =~ '(?i).*${searchTerm}.*' OR n.description =~ '(?i).*${searchTerm}.*' RETURN n`)
+	.then(function(result) {
+		return res.status(201).json(result);
+	})
+	.catch(function(error) {
+		console.log(error);
+	});
+});
+
 
 const port = process.env.PORT || 9876;
 app.listen(port, (err) => {
